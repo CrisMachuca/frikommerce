@@ -34,3 +34,6 @@ dist/
 
 # Configuración de IDE
 .vscode/
+
+# ignorar este archivo
+README_local.md

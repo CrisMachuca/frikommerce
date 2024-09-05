@@ -99,13 +99,9 @@ Frikommerce es una tienda online de subastas de artículos frikis como videojueg
    flask run
    ```
 
-##
 
-## base de datos en postgreSQL
 
-nombre de la base de datos: mi_tienda
-usuario: Cristina
-password: niandra85
+
 
 ## probar el backend en postman
 
