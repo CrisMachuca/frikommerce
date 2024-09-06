@@ -23,6 +23,13 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);  // Mantenemos la sesión abierta si existe el token
+    }
+  }, []);
+
   const handleLogin = () => {
     setIsLoggedIn(true);
     setShowLoginModal(false);
