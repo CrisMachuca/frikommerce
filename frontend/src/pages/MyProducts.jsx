@@ -153,7 +153,7 @@ const MyProducts = () => {
                     <img
                       src={product.image_url}
                       alt={product.name}
-                      className="w-full h-auto mt-4"
+                      className="w-full h-48 object-contain rounded-lg mt-4"
                     />
                   )}
                   <button

@@ -129,7 +129,7 @@ const Home = () => {
             {/* Botón de cerrar sesión en la parte inferior */}
             <button
               onClick={handleLogout}
-              className="absolute bottom-4 left-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
+              className="absolute bottom-4 left-4 w-auto bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
             >
               Cerrar Sesión
             </button>
