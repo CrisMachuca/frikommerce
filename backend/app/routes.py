@@ -20,13 +20,27 @@ def get_products():
 @main.route('/products', methods=['POST'])
 @jwt_required()
 def create_product():
-    data = request.get_json()
     user_id = get_jwt_identity()
 
-    new_product = Product( 
-        name=data['name'],
-        description=data['description'],
-        starting_bid=data['starting_bid'],
+    name = request.form.get('name')
+    description = request.form.get('description')
+    starting_bid = request.form.get('starting_bid')
+
+    image_url = None
+    if 'image' in request.files:
+        image = request.files['image']
+        try:
+            # Subimos la imagen a Cloudinary
+            upload_result = cloudinary.uploader.upload(image)
+            image_url = upload_result.get('url')  # Obtenemos la URL de la imagen subida
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    new_product = Product(
+        name=name,
+        description=description,
+        starting_bid=starting_bid,
+        image_url=image_url,  # Guardamos la URL de la imagen en la base de datos
         owner_id=user_id
     )
     db.session.add(new_product)
@@ -61,19 +75,35 @@ def update_product(product_id):
     product = Product.query.get_or_404(product_id)
 
     if product.owner_id != user_id:
-        return jsonify({"error": "no tienes permiso para editar este producto"}), 403
-    
-    data = request.get_json()
-    if 'name' in data:
-        product.name = data['name']
-    if 'description' in data:
-        product.description = data['description']
-    if 'starting_bid' in data:
-        product.starting_bid = data['starting_bid']
+        return jsonify({"error": "No tienes permiso para editar este producto"}), 403
+
+    # Usamos request.form para obtener los datos del formulario
+    name = request.form.get('name')
+    description = request.form.get('description')
+    starting_bid = request.form.get('starting_bid')
+
+    # Si hay una nueva imagen, la subimos a Cloudinary
+    image_url = product.image_url  # Mantén la URL de la imagen actual
+    if 'image' in request.files:
+        image = request.files['image']
+        try:
+            upload_result = cloudinary.uploader.upload(image)
+            image_url = upload_result.get('url')  # Actualizar la URL de la imagen
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    # Actualiza los campos si se proporcionan
+    if name:
+        product.name = name
+    if description:
+        product.description = description
+    if starting_bid:
+        product.starting_bid = starting_bid
+    product.image_url = image_url  # Actualizamos la URL de la imagen (si se subió una nueva)
 
     db.session.commit()
 
-    return jsonify({"message": "Producto actualizado exitosamente", "product": product.to_dict()}), 200   
+    return jsonify({"message": "Producto actualizado exitosamente", "product": product.to_dict()}), 200
 
 @main.route('/products/<int:product_id>/bids', methods=['POST'])
 @jwt_required()

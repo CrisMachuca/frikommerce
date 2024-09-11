@@ -8,6 +8,7 @@ const MyProducts = () => {
     name: '',
     description: '',
     starting_bid: '',
+    image: null, // Para almacenar la nueva imagen
   });
 
   const fetchMyProducts = async () => {
@@ -39,18 +40,26 @@ const MyProducts = () => {
       name: product.name,
       description: product.description,
       starting_bid: product.starting_bid,
+      image: null, // Inicialmente sin imagen (si el usuario no selecciona una nueva)
     });
   };
 
   const handleSaveEdit = async (productId) => {
+    const formData = new FormData();
+    formData.append('name', editForm.name);
+    formData.append('description', editForm.description);
+    formData.append('starting_bid', editForm.starting_bid);
+    if (editForm.image) {
+      formData.append('image', editForm.image); // Si hay una imagen nueva, la añadimos
+    }
+
     try {
       const response = await fetch(`http://localhost:5000/products/${productId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`, // Incluye el token en los headers
         },
-        body: JSON.stringify(editForm),
+        body: formData, // Enviar el formData
       });
 
       if (response.ok) {
@@ -122,6 +131,11 @@ const MyProducts = () => {
                     onChange={(e) => setEditForm({ ...editForm, starting_bid: e.target.value })}
                     className="block w-full mb-2 p-2 border rounded"
                   />
+                  <input
+                    type="file"
+                    onChange={(e) => setEditForm({ ...editForm, image: e.target.files[0] })} // Seleccionar una nueva imagen
+                    className="block w-full mb-2 p-2 border rounded"
+                  />
                   <button
                     onClick={() => handleSaveEdit(product.id)}
                     className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-400"
@@ -135,6 +149,13 @@ const MyProducts = () => {
                   <h2 className="text-2xl font-semibold">{product.name}</h2>
                   <p>{product.description}</p>
                   <p className="text-gray-500">Precio inicial: ${product.starting_bid}</p>
+                  {product.image_url && (
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="w-full h-auto mt-4"
+                    />
+                  )}
                   <button
                     onClick={() => handleEditClick(product)}
                     className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-400"

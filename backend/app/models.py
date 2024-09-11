@@ -33,6 +33,7 @@ class Product(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     starting_bid = db.Column(db.Float, nullable=False)
+    image_url = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -46,7 +47,8 @@ class Product(db.Model):
             'description': self.description,
             'starting_bid': self.starting_bid,
             'created_at': self.created_at,
-            'owner_id': self.owner_id
+            'owner_id': self.owner_id,
+            'image_url': self.image_url
         }
 
 class Bid(db.Model):
