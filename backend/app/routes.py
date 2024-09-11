@@ -40,7 +40,40 @@ def get_product(product_id):
     product = Product.query.get_or_404(product_id)
     return jsonify(product.to_dict()), 200
 
+@main.route('/products/<int:product_id>', methods=['DELETE'])
+@jwt_required()
+def delete_product(product_id):
+    user_id = get_jwt_identity()
+    product = Product.query.get_or_404(product_id)
 
+    if product.owner_id != user_id:
+        return jsonify({"error": "no tienes permiso para eliminar este producto"}), 403
+    
+    db.session.delete(product)
+    db.session.commit()
+
+    return jsonify({"message": "Producto eliminado exitosamente"}), 200
+
+@main.route('/products/<int:product_id>', methods=['PUT'])
+@jwt_required()
+def update_product(product_id):
+    user_id = get_jwt_identity()
+    product = Product.query.get_or_404(product_id)
+
+    if product.owner_id != user_id:
+        return jsonify({"error": "no tienes permiso para editar este producto"}), 403
+    
+    data = request.get_json()
+    if 'name' in data:
+        product.name = data['name']
+    if 'description' in data:
+        product.description = data['description']
+    if 'starting_bid' in data:
+        product.starting_bid = data['starting_bid']
+
+    db.session.commit()
+
+    return jsonify({"message": "Producto actualizado exitosamente", "product": product.to_dict()}), 200   
 
 @main.route('/products/<int:product_id>/bids', methods=['POST'])
 @jwt_required()

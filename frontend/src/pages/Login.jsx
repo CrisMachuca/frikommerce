@@ -20,6 +20,7 @@ const Login = ({ onLogin }) => {
 
     if (response.ok) {
       localStorage.setItem('token', data.access_token);
+      localStorage.setItem('username', data.username);
       localStorage.setItem('profile_picture', data.profile_picture);
       setMessage('Logged in successfully!');
       onLogin(); // Actualiza el estado en el componente padre al iniciar sesión correctamente

@@ -4,7 +4,7 @@ import Login from './Login';
 import Products from './Products';
 import AddProduct from './AddProduct';
 import Modal from './Modal';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +12,8 @@ const Home = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const profilePicture = localStorage.getItem('profile_picture');
+  const username = localStorage.getItem('username');
+  const navigate = useNavigate();
 
   const fetchProducts = async () => {
     const response = await fetch('http://localhost:5000/products');
@@ -35,6 +37,14 @@ const Home = () => {
     setShowLoginModal(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('profile_picture');
+    setIsLoggedIn(false);
+    navigate('/')
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <nav className="bg-indigo-600 p-4 shadow-md">
@@ -44,19 +54,30 @@ const Home = () => {
             {!isLoggedIn && (
               <>
                 <button
-                  className="text-white hover:text-indigo-200"
+                  className="bg-green-500 hover:text-indigo-200"
                   onClick={() => setShowLoginModal(true)}
                 >
                   Iniciar Sesión
                 </button>
                 <button
-                  className="text-white hover:text-indigo-200"
+                  className="bg-yellow-500 hover:text-indigo-200"
                   onClick={() => setShowRegisterModal(true)}
                 >
                   Registro
                 </button>
               </>
             )}
+            {isLoggedIn && (
+              <>
+                <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
+            >
+              Cerrar Sesión
+            </button> 
+              </>
+            )}
+              
           </div>
         </div>
       </nav>
@@ -76,7 +97,13 @@ const Home = () => {
             alt="Foto de perfil"
             className="mt-2 w-16 h-16 rounded-full border border-gray-300"
           />
+
         )}
+        {username && (
+              <p className="mt-2 text-center text-gray-700 text-sm font-semibold">
+                {username}
+              </p>
+            )}
             <ul className="space-y-4">
               <li>
                 <Link to="/my-products" className="text-indigo-600 hover:text-indigo-400">
@@ -99,6 +126,13 @@ const Home = () => {
                 </Link>
               </li>
             </ul>
+            {/* Botón de cerrar sesión en la parte inferior */}
+            <button
+              onClick={handleLogout}
+              className="absolute bottom-4 left-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
+            >
+              Cerrar Sesión
+            </button>
           </aside>
         )}
 

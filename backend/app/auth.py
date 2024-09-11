@@ -46,5 +46,6 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify({
         "access_token": access_token,
-        "profile_picture": user.profile_picture
+        "profile_picture": user.profile_picture,
+        "username": user.username
     }), 200
