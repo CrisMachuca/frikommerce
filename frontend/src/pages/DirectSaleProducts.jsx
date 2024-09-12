@@ -16,13 +16,17 @@ const DirectSaleProducts = () => {
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Productos en Venta Directa</h2>
-            <ul className="space-y-6">
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map(product => (
-                    <li key={product.id} className="bg-white p-4 shadow rounded">
-                        <h3 className="text-xl font-semibold">{product.name}</h3>
+                    <li key={product.id} className="bg-white p-4 shadow-lg rounded-lg">
+                        <h3 className="text-xl font-semibold text-indigo-600">{product.name}</h3>
                         <p className="mt-2 text-gray-700">{product.description}</p>
                         {product.image_url && (
-                            <img src={product.image_url} alt={product.name} className="w-full h-48 object-contain rounded-lg mt-4" />
+                            <img
+                                src={product.image_url}
+                                alt={product.name}
+                                className="w-full h-48 object-contain rounded-lg mt-4"
+                            />
                         )}
                         <p className="text-gray-500 mt-2">Precio: ${product.price}</p>
                     </li>
