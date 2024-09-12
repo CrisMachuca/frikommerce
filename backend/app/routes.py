@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash
 from app import db
-from app.models import Product, User, Bid
+from app.models import Product, User, Bid, DirectSaleProduct
 import cloudinary.uploader
 
 main = Blueprint('main', __name__)
@@ -199,3 +199,60 @@ def update_account():
 
     return jsonify({'message': 'Your account has been updated!'}), 200
 
+
+@main.route('/direct-sale-products', methods=['GET'])
+def get_direct_sale_products():
+    products = DirectSaleProduct.query.all()
+    return jsonify([product.to_dict() for product in products]), 200
+
+@main.route('/direct-sale-products', methods=['POST'])
+@jwt_required()
+def create_direct_sale_product():
+    user_id = get_jwt_identity()
+    
+    name = request.form.get('name')
+    description = request.form.get('description')
+    price = request.form.get('price')
+    
+    image_url = None
+    if 'image' in request.files:
+        image = request.files['image']
+        try:
+            upload_result = cloudinary.uploader.upload(image)
+            image_url = upload_result.get('url')
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    
+    new_product = DirectSaleProduct(
+        name=name,
+        description=description,
+        price=price,
+        image_url=image_url,
+        owner_id=user_id
+    )
+    
+    db.session.add(new_product)
+    db.session.commit()
+
+    return jsonify(new_product.to_dict()), 201
+
+@main.route('/direct-sale-products/<int:product_id>', methods=['DELETE'])
+@jwt_required()
+def delete_direct_sale_product(product_id):
+    user_id = get_jwt_identity()
+    product = DirectSaleProduct.query.get_or_404(product_id)
+
+    if product.owner_id != user_id:
+        return jsonify({"error": "No tienes permiso para eliminar este producto"}), 403
+
+    db.session.delete(product)
+    db.session.commit()
+
+    return jsonify({"message": "Producto eliminado exitosamente"}), 200
+
+@main.route('/my-direct-sale-products', methods=['GET'])
+@jwt_required()
+def get_my_direct_sale_products():
+    user_id = get_jwt_identity()
+    products = DirectSaleProduct.query.filter_by(owner_id=user_id).all()
+    return jsonify([product.to_dict() for product in products]), 200

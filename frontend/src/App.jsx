@@ -10,6 +10,8 @@ import MyProducts from './pages/MyProducts';
 import MyBids from './pages/MyBids';
 import MyOrders from './pages/MyOrders';
 import MyAccount from './pages/MyAccount';
+import MyDirectSaleProducts from './pages/MyDirectSaleProducts';
+import DirectSaleProducts from './pages/DirectSaleProducts';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/my-products" element={<MyProducts />} />
         <Route path="/my-bids" element={<MyBids />} />
+        <Route path="/direct-sale-products" element={<DirectSaleProducts />} />
+        <Route path="/my-direct-sale-products" element={<MyDirectSaleProducts />}/>
         <Route path="/my-orders" element={<MyOrders />} />
         <Route path="/my-account" element={<MyAccount />} />
       </Routes>

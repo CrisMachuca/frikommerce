@@ -3,11 +3,14 @@ import Register from './Register';
 import Login from './Login';
 import Products from './Products';
 import AddProduct from './AddProduct';
+import DirectSaleProducts from './DirectSaleProducts';
+import AddProductToSell from './AddProductToSell';
 import Modal from './Modal';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [productsToSell, setProductsToSell] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -20,9 +23,15 @@ const Home = () => {
     const data = await response.json();
     setProducts(data);
   };
+  const fetchProductsToSell = async () => {
+    const response = await fetch('http://localhost:5000/direct-sale-products');
+    const data = await response.json();
+    setProductsToSell(data);
+  };
 
   useEffect(() => {
     fetchProducts();
+    fetchProductsToSell();
   }, []);
 
   useEffect(() => {
@@ -70,14 +79,13 @@ const Home = () => {
             {isLoggedIn && (
               <>
                 <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
-            >
-              Cerrar Sesión
-            </button> 
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
+                >
+                  Cerrar Sesión
+                </button> 
               </>
             )}
-              
           </div>
         </div>
       </nav>
@@ -90,16 +98,14 @@ const Home = () => {
         {isLoggedIn && (
           <aside className="w-44 bg-white shadow-lg p-4 h-screen sticky top-0">
             <h2 className="text-2xl font-semibold mb-4">Mi Cuenta</h2>
-            {/* Mostrar la foto de perfil debajo del h2 */}
-        {profilePicture && (
-          <img
-            src={profilePicture}
-            alt="Foto de perfil"
-            className="mt-2 w-16 h-16 rounded-full border border-gray-300"
-          />
-
-        )}
-        {username && (
+            {profilePicture && (
+              <img
+                src={profilePicture}
+                alt="Foto de perfil"
+                className="mt-2 w-16 h-16 rounded-full border border-gray-300"
+              />
+            )}
+            {username && (
               <p className="mt-2 text-center text-gray-700 text-sm font-semibold">
                 {username}
               </p>
@@ -126,7 +132,6 @@ const Home = () => {
                 </Link>
               </li>
             </ul>
-            {/* Botón de cerrar sesión en la parte inferior */}
             <button
               onClick={handleLogout}
               className="absolute bottom-4 left-4 w-auto bg-red-500 text-white py-2 rounded-lg hover:bg-red-400"
@@ -138,18 +143,33 @@ const Home = () => {
 
         <main className={`flex-1 p-8 ${isLoggedIn ? 'ml-0' : ''}`}>
           {isLoggedIn && (
-            <div id="add-product" className="mb-10">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-700">Añadir Producto</h2>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <AddProduct fetchProducts={fetchProducts} />
+            <div className="flex flex-col md:flex-row gap-6 mb-10">
+              <div id="add-product" className="flex-1">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-700">Añadir Subasta</h2>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <AddProduct fetchProducts={fetchProducts} />
+                </div>
+              </div>
+              <div id="add-product-to-sell" className="flex-1">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-700">Añadir Venta</h2>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <AddProductToSell fetchProductsToSell={fetchProductsToSell} />
+                </div>
               </div>
             </div>
           )}
 
           <div id="products" className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Productos</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Productos en Subasta</h2>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <Products products={products} />
+            </div>
+          </div>
+
+          <div id="productsForSale" className="mb-10">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Compra Directa</h2>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <DirectSaleProducts productsToSell={productsToSell} />
             </div>
           </div>
         </main>
