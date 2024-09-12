@@ -145,7 +145,8 @@ def get_my_bids():
         'amount': bid.amount,
         'created_at': bid.created_at,
         'product_name': bid.product.name,
-        'product_id': bid.product_id
+        'product_id': bid.product_id,
+        'image_url': bid.product.image_url 
     } for bid in bids]
 
     return jsonify(bid_list), 200
