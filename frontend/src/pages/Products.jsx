@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -14,6 +18,10 @@ const Products = () => {
         fetchProducts();
     }, []);
 
+    const calculateTimeRemaining = (endTime) => {
+        return dayjs(endTime).fromNow(true); // Muestra el tiempo restante en formato relativo
+    };
+
     return (
         <div className="container mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Subastas Disponibles</h2>
@@ -23,6 +31,7 @@ const Products = () => {
                         key={product.id}
                         className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                     >
+                        <h2>{product.category}</h2>
                         <h3 className="text-xl font-semibold text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
                             <Link to={`/products/${product.id}`}>
                                 {product.name}
@@ -36,6 +45,7 @@ const Products = () => {
                             />
                         )}
                         <p className="text-gray-500 mt-4">Precio Inicial: <span className="text-lg font-bold">${product.starting_bid}</span></p>
+                        <p className="text-red-500 mt-2">Tiempo restante: {calculateTimeRemaining(product.end_time)}</p>
                     </div>
                 ))}
             </div>

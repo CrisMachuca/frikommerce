@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -19,6 +20,12 @@ const MyOrders = () => {
 
   return (
     <div>
+      <Link
+        to="/"
+        className='inline-block mb-4 bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-400'
+      >
+        Volver a inicio
+      </Link>
       <h1 className="text-3xl font-semibold mb-6">Mis Pedidos</h1>
       {orders.length === 0 ? (
         <p>No tienes pedidos todavía.</p>

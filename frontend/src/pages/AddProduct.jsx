@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const AddProduct = ({ fetchProducts }) => {
+    const [category, setCategory] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [startingBid, setStartingBid] = useState('');
@@ -13,6 +14,7 @@ const AddProduct = ({ fetchProducts }) => {
 
         // Usamos FormData para manejar el archivo de imagen y los datos del formulario
         const formData = new FormData();
+        formData.append('category', category);
         formData.append('name', name);
         formData.append('description', description);
         formData.append('starting_bid', startingBid);
@@ -45,6 +47,14 @@ const AddProduct = ({ fetchProducts }) => {
         <div>
             <h2 className="text-xl font-semibold mb-4">Agregar Producto</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
+                <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+                    <option value="" disabled>Seleccione una categoría</option>
+                    <option value="Figuras">Figuras</option>
+                    <option value="Consolas">Consolas</option>
+                    <option value="Comics">Comics</option>
+                    <option value="Accesorios de consolas">Accesorios de consolas</option>
+                    <option value="Otros">Otros</option>
+                </select>
                 <input
                     type="text"
                     placeholder="Nombre"

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const MyAccount = () => {
   const [user, setUser] = useState({
@@ -63,6 +64,12 @@ const MyAccount = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <Link
+        to="/"
+        className='inline-block mb-4 bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-400'
+      >
+        Volver a inicio
+      </Link>
       <h1 className="text-3xl font-semibold mb-6">Mi Cuenta</h1>
 
       <form onSubmit={handleUpdateAccount}>

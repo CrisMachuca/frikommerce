@@ -8,8 +8,11 @@ const MyProducts = () => {
     name: '',
     description: '',
     starting_bid: '',
+    category: '',
     image: null, // Para almacenar la nueva imagen
   });
+
+  const categories = ['Figuras', 'Consolas', 'Comics', 'Accesorios de consolas', 'Otros'];
 
   const fetchMyProducts = async () => {
     try {
@@ -40,6 +43,7 @@ const MyProducts = () => {
       name: product.name,
       description: product.description,
       starting_bid: product.starting_bid,
+      category: product.category,
       image: null, // Inicialmente sin imagen (si el usuario no selecciona una nueva)
     });
   };
@@ -49,6 +53,7 @@ const MyProducts = () => {
     formData.append('name', editForm.name);
     formData.append('description', editForm.description);
     formData.append('starting_bid', editForm.starting_bid);
+    formData.append('category', editForm.category);
     if (editForm.image) {
       formData.append('image', editForm.image); // Si hay una imagen nueva, la añadimos
     }
@@ -104,7 +109,7 @@ const MyProducts = () => {
       >
         Volver a inicio
       </Link>
-      <h1 className="text-3xl font-semibold mb-6">Mis Productos</h1>
+      <h1 className="text-3xl font-semibold mb-6">Mis Subastas</h1>
       {products.length === 0 ? (
         <p>No has subido productos todavía.</p>
       ) : (
@@ -114,6 +119,17 @@ const MyProducts = () => {
               {isEditing === product.id ? (
                 // Modo de edición
                 <div>
+                  <select
+                    value={editForm.category}
+                    onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                    className="block w-full mb-2 p-2 border rounded"
+                  >
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     value={editForm.name}

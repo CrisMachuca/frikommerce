@@ -113,7 +113,12 @@ const Home = () => {
             <ul className="space-y-4">
               <li>
                 <Link to="/my-products" className="text-indigo-600 hover:text-indigo-400">
-                  Mis Productos
+                  Mis Subastas
+                </Link>
+              </li>
+              <li>
+                <Link to="/my-direct-sale-products" className="text-indigo-600 hover:text-indigo-400">
+                  Mis Ventas Directas
                 </Link>
               </li>
               <li>

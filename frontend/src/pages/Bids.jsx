@@ -15,12 +15,12 @@ const Bids = ({ productId }) => {
 
     return (
         <div>
-            <h2>Bids</h2>
+            <h2>Pujas:</h2>
             <ul>
                 {bids.map(bid => (
                     <li key={bid.id}>
-                        <p>Amount: ${bid.amount}</p>
-                        <p>Placed by: {bid.username}</p>
+                        <p>Importe: ${bid.amount}</p>
+                        <p>Usuario: {bid.username}</p>
                     </li>
                 ))}
             </ul>

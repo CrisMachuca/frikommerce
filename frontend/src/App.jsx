@@ -12,6 +12,7 @@ import MyOrders from './pages/MyOrders';
 import MyAccount from './pages/MyAccount';
 import MyDirectSaleProducts from './pages/MyDirectSaleProducts';
 import DirectSaleProducts from './pages/DirectSaleProducts';
+import DirectSaleProductDetail from './pages/DirectSaleProductDetail';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/my-products" element={<MyProducts />} />
         <Route path="/my-bids" element={<MyBids />} />
         <Route path="/direct-sale-products" element={<DirectSaleProducts />} />
+        <Route path="/direct-sale-products/:id" element={<DirectSaleProductDetail />} />
         <Route path="/my-direct-sale-products" element={<MyDirectSaleProducts />}/>
         <Route path="/my-orders" element={<MyOrders />} />
         <Route path="/my-account" element={<MyAccount />} />

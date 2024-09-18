@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PlaceBid from '../pages/PlaceBid';
 import Bids from '../pages/Bids';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -27,8 +31,17 @@ const ProductDetail = () => {
         return <div>Product not found</div>;
     }
 
+    // Calcular el tiempo restante usando dayjs
+    const timeLeft = dayjs(product.end_time).fromNow(true);
+
     return (
-        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="container mx-auto px-4 py-8 flex-row items-center justify-center min-h-screen bg-gray-100">
+            <Link
+        to="/"
+        className='inline-block mb-4 bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-400'
+      >
+        Volver a inicio
+      </Link>
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
                 <h1 className="text-3xl font-bold mb-4 text-indigo-600">{product.name}</h1>
 
@@ -45,6 +58,7 @@ const ProductDetail = () => {
                 <p className="text-xl font-semibold text-gray-800 mb-6">
                     Precio Inicial: <span className="text-green-600">${product.starting_bid}</span>
                 </p>
+                <p>Time left: {timeLeft}</p> {/* Mostrar el tiempo restante */}
 
                 <PlaceBid productId={product.id} />
 

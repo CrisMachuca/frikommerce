@@ -26,10 +26,10 @@ const PlaceBid = ({ productId }) => {
 
     return (
         <div>
-            <h2>Place a Bid</h2>
+            <h2>Haz una nueva puja</h2>
             <form onSubmit={handleSubmit}>
-                <input type="number" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
-                <button type="submit">Place Bid</button>
+                <input type="number" placeholder="Importe" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                <button type="submit">Pujar</button>
             </form>
             <p>{message}</p>
         </div>
