@@ -271,6 +271,49 @@ def delete_direct_sale_product(product_id):
 
     return jsonify({"message": "Producto eliminado exitosamente"}), 200
 
+
+@main.route('/direct-sale-products/<int:product_id>', methods=['PUT'])
+@jwt_required()
+def update_direct_sale_product(product_id):
+    user_id = get_jwt_identity()
+    product = DirectSaleProduct.query.get_or_404(product_id)
+
+    # Verificar si el usuario es el propietario del producto
+    if product.owner_id != user_id:
+        return jsonify({"error": "No tienes permiso para editar este producto"}), 403
+
+    # Usamos request.form para obtener los datos del formulario
+    name = request.form.get('name')
+    description = request.form.get('description')
+    price = request.form.get('price')
+    category = request.form.get('category')
+
+    # Si hay una nueva imagen, la subimos a Cloudinary
+    image_url = product.image_url  # Mantén la URL de la imagen actual
+    if 'image' in request.files:
+        image = request.files['image']
+        try:
+            upload_result = cloudinary.uploader.upload(image)
+            image_url = upload_result.get('url')  # Actualizar la URL de la imagen
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    # Actualizar los campos solo si se proporcionan
+    if name:
+        product.name = name
+    if description:
+        product.description = description
+    if price:
+        product.price = price
+    if category:
+        product.category = category
+    product.image_url = image_url  # Actualizar la URL de la imagen (si se subió una nueva)
+
+    # Guardar los cambios en la base de datos
+    db.session.commit()
+
+    return jsonify({"message": "Producto actualizado exitosamente", "product": product.to_dict()}), 200
+
 @main.route('/my-direct-sale-products', methods=['GET'])
 @jwt_required()
 def get_my_direct_sale_products():
