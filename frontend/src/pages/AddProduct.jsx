@@ -55,7 +55,7 @@ const AddProduct = ({ fetchProducts }) => {
                     <option value="Figuras">Figuras</option>
                     <option value="Consolas">Consolas</option>
                     <option value="Comics">Comics</option>
-                    <option value="Accesorios de consolas">Accesorios de consolas</option>
+                    <option value="Accesorios de consolas">Accesorios</option>
                     <option value="Otros">Otros</option>
                 </select>
                 <input
