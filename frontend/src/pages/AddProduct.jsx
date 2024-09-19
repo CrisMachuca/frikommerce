@@ -5,6 +5,7 @@ const AddProduct = ({ fetchProducts }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [startingBid, setStartingBid] = useState('');
+    const [auctionDuration, setAuctionDuration] = useState('7d');
     const [image, setImage] = useState(null); // Para almacenar la imagen
     const [message, setMessage] = useState('');
 
@@ -18,6 +19,7 @@ const AddProduct = ({ fetchProducts }) => {
         formData.append('name', name);
         formData.append('description', description);
         formData.append('starting_bid', startingBid);
+        formData.append('auction_duration', auctionDuration);
         if (image) {
             formData.append('image', image); // Agregar la imagen si se seleccionó
         }
@@ -36,6 +38,7 @@ const AddProduct = ({ fetchProducts }) => {
             setName(''); // Limpiar los campos después de enviar
             setDescription('');
             setStartingBid('');
+            setAuctionDuration('7d');
             setImage(null);
             fetchProducts(); // Refrescar la lista de productos después de agregar uno
         } else {
@@ -78,6 +81,17 @@ const AddProduct = ({ fetchProducts }) => {
                     className="w-full p-2 border rounded"
                     required
                 />
+                <select
+                    value={auctionDuration}
+                    onChange={(e) => setAuctionDuration(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    required
+                >
+                    <option value="24h">24 horas</option>
+                    <option value="48h">48 horas</option>
+                    <option value="7d">7 días</option>
+                    <option value="15d">15 días</option>
+                </select>
                 <input
                     type="file"
                     onChange={(e) => setImage(e.target.files[0])} // Guardamos el archivo de imagen seleccionado

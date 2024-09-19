@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
+dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 const Products = () => {
@@ -18,8 +20,28 @@ const Products = () => {
         fetchProducts();
     }, []);
 
-    const calculateTimeRemaining = (endTime) => {
-        return dayjs(endTime).fromNow(true); // Muestra el tiempo restante en formato relativo
+    const calculateTimeLeft = (endTime) => {
+        const now = dayjs();
+        const end = dayjs(endTime);
+        const diff = end.diff(now); // diferencia en milisegundos
+
+        if (diff <= 0) {
+            return "Subasta terminada";
+        }
+
+        const duration = dayjs.duration(diff);
+
+        if (duration.asHours() < 24) {
+            return `${Math.floor(duration.asHours())} horas y ${duration.minutes()} minutos`;
+        } else if (duration.asHours() < 48) {
+            const days = Math.floor(duration.asDays());
+            const hours = duration.hours();
+            return `${days} día y ${hours} horas`;
+        } else {
+            const days = Math.floor(duration.asDays());
+            const hours = duration.hours();
+            return `${days} días y ${hours} horas`;
+        }
     };
 
     return (
@@ -45,7 +67,7 @@ const Products = () => {
                             />
                         )}
                         <p className="text-gray-500 mt-4">Precio Inicial: <span className="text-lg font-bold">${product.starting_bid}</span></p>
-                        <p className="text-red-500 mt-2">Tiempo restante: {calculateTimeRemaining(product.end_time)}</p>
+                        <p className="text-red-500 mt-2">Tiempo restante: {calculateTimeLeft(product.end_time)}</p>
                     </div>
                 ))}
             </div>

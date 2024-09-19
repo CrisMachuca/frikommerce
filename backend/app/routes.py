@@ -27,10 +27,20 @@ def create_product():
     description = request.form.get('description')
     starting_bid = request.form.get('starting_bid')
     category = request.form.get('category')
+    auction_duration = request.form.get('auction_duration')
     end_time = request.form.get('end_time')
 
-    if not end_time:
+    # Definir el tiempo de finalización de la subasta en función del plazo seleccionado
+    if auction_duration == '24h':
+        end_time = datetime.utcnow() + timedelta(hours=24)
+    elif auction_duration == '48h':
+        end_time = datetime.utcnow() + timedelta(hours=48)
+    elif auction_duration == '7d':
         end_time = datetime.utcnow() + timedelta(days=7)
+    elif auction_duration == '15d':
+        end_time = datetime.utcnow() + timedelta(days=15)
+    else:
+        end_time = datetime.utcnow() + timedelta(days=7)  # Valor predeterminado a 7 días
 
     image_url = None
     if 'image' in request.files:
